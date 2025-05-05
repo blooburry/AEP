@@ -2,7 +2,7 @@
 #include <QPaintDevice>
 #include <QPainter>
 
-Schuifdeur::Schuifdeur(int x, int y, unsigned int l, Sensor* s) : Deur(x, y, l), sensor(s) {
+Schuifdeur::Schuifdeur(int x, int y, unsigned int l, Sensor* s, shared_ptr<Slot> slot) : Deur(x, y, l, slot), sensor(s) {
     status = false;
 }
 

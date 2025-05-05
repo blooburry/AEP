@@ -4,6 +4,8 @@
 #include "hallsensor.h"
 #include "schuifdeur.h"
 #include "draaideur.h"
+#include "sleutelSlot.h"
+#include "codeSlot.h"
 
 using namespace std;
 
@@ -13,16 +15,20 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     s1=make_unique<Hallsensor>(515,160);
-    schuifdeur = make_unique<Schuifdeur>(500, 182, 60, s1.get());
-    draaideuren.push_back(make_unique<Draaideur>(246, 107, 25, false));
-    draaideuren.push_back(make_unique<Draaideur>(271, 294, 17, true));
+    shared_ptr<Slot> schuifdeurSlot = make_shared<SleutelSlot>("abcd");
+    schuifdeur = make_unique<Schuifdeur>(500, 182, 60, s1.get(), schuifdeurSlot);
+    shared_ptr<Slot> draaideurSlot_0 = make_shared<CodeSlot>("1234");
+    shared_ptr<Slot> draaideurSlot_1 = make_shared<CodeSlot>("5678");
+    draaideuren.push_back(make_unique<Draaideur>(246, 107, 25, false, draaideurSlot_0));
+    draaideuren.push_back(make_unique<Draaideur>(271, 294, 17, true, draaideurSlot_1));
 }
 
 void MainWindow::paintEvent(QPaintEvent *event){
 
     QPainter painter(this);
     QPen pen;
-    QImage image("C:\\Users\\altac\\Downloads\\gebouw\\Gebouw.png");
+
+    QImage image("../../Gebouw.png");
 
     pen.setColor(Qt::green);
     pen.setWidth(4);
@@ -46,7 +52,9 @@ void MainWindow::on_schuifdeurSensorKnop_clicked()
     if(schuifdeur->isDeurOpen()) {
         schuifdeur->sluit();
     } else {
-        schuifdeur->open();
+        QString s = ui->schuifdeurKnopLineEdit->text();
+        ui->schuifdeurKnopLineEdit->clear();
+        schuifdeur->open(s.toStdString());
     }
 
     update();
@@ -69,7 +77,8 @@ void MainWindow::on_pushButton_2_clicked()
     if(draaideuren[0]->isDeurOpen()) {
         draaideuren[0]->sluit();
     } else {
-        draaideuren[0]->open();
+        draaideuren[0]->open(ui->draaideur_0_lineEdit->text().toStdString());
+        ui->draaideur_0_lineEdit->clear();
     }
 
     update();
@@ -81,7 +90,8 @@ void MainWindow::on_pushButton_clicked()
     if(draaideuren[1]->isDeurOpen()) {
         draaideuren[1]->sluit();
     } else {
-        draaideuren[1]->open();
+        draaideuren[1]->open(ui->draaideur_1_lineEdit->text().toStdString());
+        ui->draaideur_1_lineEdit->clear();
     }
 
     update();

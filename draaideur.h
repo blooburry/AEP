@@ -9,7 +9,7 @@ private:
     int x;
     int y;
 public:
-    Draaideur(int, int, unsigned int, bool);
+    Draaideur(int, int, unsigned int, bool, shared_ptr<Slot>);
     void teken(QPaintDevice*) override;
 };
 

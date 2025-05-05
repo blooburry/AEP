@@ -3,10 +3,11 @@
 
 #include "deur.h"
 #include "sensor.h"
+#include "slot.h"
 
 class Schuifdeur : public Deur {
 public:
-    Schuifdeur(int, int, unsigned int, Sensor*);
+    Schuifdeur(int, int, unsigned int, Sensor*, shared_ptr<Slot>);
     void teken(QPaintDevice*) override;
     void sluit() override;
 

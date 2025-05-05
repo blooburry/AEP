@@ -3,16 +3,20 @@
 #include <QPaintDevice>
 #include <QPainter>
 
-Deur::Deur(int a, int b, unsigned int l): x_coordinaat(a),y_coordinaat(b), lengte(l) {
+Deur::Deur(int a, int b, unsigned int l, shared_ptr<Slot> s): x_coordinaat(a),y_coordinaat(b), lengte(l), status(false), slot(s) {
 
 }
 
-void Deur::open() {
-    status = true;
+void Deur::open(string s) {
+    this->slot->ontgrendel(s);
+    if(!this->slot->isVergrendeld()) {
+        status = true;
+    }
 }
 
 void Deur::sluit() {
     status = false;
+    this->slot->vergrendel();
 }
 
 void Deur::teken(QPaintDevice* device) {
