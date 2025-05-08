@@ -8,11 +8,12 @@ class SleutelSlot : public Slot {
 private:
     string sleutel;
     bool vergrendeld;
+    shared_ptr<QLineEdit> input;
 public:
-    SleutelSlot(string);
+    SleutelSlot(string, shared_ptr<QLineEdit>);
     void vergrendel() override;
     bool isVergrendeld() override;
-    void ontgrendel(string) override;
+    void ontgrendel() override;
 };
 
 #endif // SLEUTELSLOT_H

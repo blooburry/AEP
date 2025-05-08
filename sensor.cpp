@@ -50,3 +50,8 @@ void Sensor::teken(QPaintDevice* tp)
      p.drawEllipse(x,y,20,20);
 }
 
+int Sensor::getX() const {
+    return x;
+}
+int Sensor::getY() const { return y; }
+bool Sensor:: getGeactiveerd() const { return geactiveerd; }

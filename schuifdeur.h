@@ -7,7 +7,7 @@
 
 class Schuifdeur : public Deur {
 public:
-    Schuifdeur(int, int, unsigned int, Sensor*, shared_ptr<Slot>);
+    Schuifdeur(int, int, unsigned int, Sensor*);
     void teken(QPaintDevice*) override;
     void sluit() override;
 

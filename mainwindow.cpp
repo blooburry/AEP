@@ -15,12 +15,19 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     s1=make_unique<Hallsensor>(515,160);
-    shared_ptr<Slot> schuifdeurSlot = make_shared<SleutelSlot>("abcd");
-    schuifdeur = make_unique<Schuifdeur>(500, 182, 60, s1.get(), schuifdeurSlot);
-    shared_ptr<Slot> draaideurSlot_0 = make_shared<CodeSlot>("1234");
-    shared_ptr<Slot> draaideurSlot_1 = make_shared<CodeSlot>("5678");
-    draaideuren.push_back(make_unique<Draaideur>(246, 107, 25, false, draaideurSlot_0));
-    draaideuren.push_back(make_unique<Draaideur>(271, 294, 17, true, draaideurSlot_1));
+    schuifdeurSlot_0 = make_shared<SleutelSlot>("abcd", make_shared<QLineEdit>(ui->schuifdeurKnopLineEdit));
+    shared_ptr<Slot> schuifdeurSlot_1 = make_shared<SleutelSlot>("efgh", make_shared<QLineEdit>(ui->schuifdeurKnopLineEdit_2));
+    schuifdeur = make_unique<Schuifdeur>(500, 182, 60, s1.get());
+    schuifdeur->voegSlotToe(schuifdeurSlot_0);
+    schuifdeur->voegSlotToe(schuifdeurSlot_1);
+    shared_ptr<Slot> draaideurSlot_0 = make_shared<CodeSlot>("1234", make_shared<QLineEdit>(ui->draaideur_0_lineEdit));
+    shared_ptr<Slot> draaideurSlot_1 = make_shared<CodeSlot>("5678", make_shared<QLineEdit>(ui->draaideur_0_lineEdit_2));
+    shared_ptr<Slot> draaideurSlot_2 = make_shared<CodeSlot>("9012", make_shared<QLineEdit>(ui->draaideur_1_lineEdit));
+    draaideuren.push_back(make_unique<Draaideur>(246, 107, 25, false));
+    draaideuren[0]->voegSlotToe(draaideurSlot_0);
+    draaideuren[0]->voegSlotToe(draaideurSlot_1);
+    draaideuren.push_back(make_unique<Draaideur>(271, 294, 17, true));
+    draaideuren[1]->voegSlotToe(draaideurSlot_2);
 }
 
 void MainWindow::paintEvent(QPaintEvent *event){
@@ -54,7 +61,7 @@ void MainWindow::on_schuifdeurSensorKnop_clicked()
     } else {
         QString s = ui->schuifdeurKnopLineEdit->text();
         ui->schuifdeurKnopLineEdit->clear();
-        schuifdeur->open(s.toStdString());
+        schuifdeur->open();
     }
 
     update();
@@ -77,7 +84,7 @@ void MainWindow::on_pushButton_2_clicked()
     if(draaideuren[0]->isDeurOpen()) {
         draaideuren[0]->sluit();
     } else {
-        draaideuren[0]->open(ui->draaideur_0_lineEdit->text().toStdString());
+        draaideuren[0]->open();
         ui->draaideur_0_lineEdit->clear();
     }
 
@@ -90,10 +97,40 @@ void MainWindow::on_pushButton_clicked()
     if(draaideuren[1]->isDeurOpen()) {
         draaideuren[1]->sluit();
     } else {
-        draaideuren[1]->open(ui->draaideur_1_lineEdit->text().toStdString());
+        draaideuren[1]->open();
         ui->draaideur_1_lineEdit->clear();
     }
 
     update();
+}
+
+
+void MainWindow::on_schuifdeurKnopLineEdit_returnPressed()
+{
+    schuifdeur->getSloten()[0]->ontgrendel();
+}
+
+
+void MainWindow::on_schuifdeurKnopLineEdit_2_returnPressed()
+{
+    schuifdeur->getSloten()[1]->ontgrendel();
+}
+
+
+void MainWindow::on_draaideur_0_lineEdit_returnPressed()
+{
+    draaideuren[0]->getSloten()[0]->ontgrendel();
+}
+
+
+void MainWindow::on_draaideur_0_lineEdit_2_returnPressed()
+{
+    draaideuren[0]->getSloten()[1]->ontgrendel();
+}
+
+
+void MainWindow::on_draaideur_1_lineEdit_returnPressed()
+{
+    draaideuren[1]->getSloten()[0]->ontgrendel();
 }
 

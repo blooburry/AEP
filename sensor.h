@@ -12,13 +12,17 @@ class Sensor
 {
 public:
     Sensor(int,int);
-    virtual void teken(QPaintDevice*);
+    virtual void teken(QPaintDevice*)=0;
     void activeer();
     void deactiveer();
     bool isGeactiveerd()const;
     std::pair<int,int> coordinaten() const;
 
-protected:
+    int getX() const;
+    int getY() const;
+    bool getGeactiveerd() const;
+
+private:
     int x,y;
     bool geactiveerd;
 };

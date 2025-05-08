@@ -1,13 +1,15 @@
 #include "codeSlot.h"
 #include <stdexcept>
 
-CodeSlot::CodeSlot(string s) : code(stoi(s)), vergrendeld(true) {}
+CodeSlot::CodeSlot(string s, shared_ptr<QLineEdit> i) : code(stoi(s)), vergrendeld(true), input(i) {}
 
 bool CodeSlot::isVergrendeld() {
     return this->vergrendeld;
 }
 
-void CodeSlot::ontgrendel(string a) {
+void CodeSlot::ontgrendel() {
+    string a = this->input->text().toStdString();
+
     try {
         int i = std::stoi(a);
         if(i == this->code) {

@@ -2,8 +2,8 @@
 #include <QPaintDevice>
 #include <QPainter>
 
-Schuifdeur::Schuifdeur(int x, int y, unsigned int l, Sensor* s, shared_ptr<Slot> slot) : Deur(x, y, l, slot), sensor(s) {
-    status = false;
+Schuifdeur::Schuifdeur(int x, int y, unsigned int l, Sensor* s) : Deur(x, y, l), sensor(s) {
+    setStatus(false);
 }
 
 void Schuifdeur::sluit() {
@@ -16,9 +16,9 @@ void Schuifdeur::teken(QPaintDevice* device) {
     QPainter painter(device);
     painter.setPen(QPen(Qt::black, 4));
 
-    int x = x_coordinaat;
-    int y = y_coordinaat;
-    unsigned int l = lengte;
+    int x = getX();
+    int y = getY();
+    unsigned int l = getLen();
 
     int offset = isDeurOpen() ? l : 0;
 

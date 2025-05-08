@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QPainter>
 
-Draaideur::Draaideur(int x, int y, unsigned int l, bool liggend, shared_ptr<Slot> slot): Deur(x, y, l, slot), liggend(liggend) {}
+Draaideur::Draaideur(int x, int y, unsigned int l, bool liggend): Deur(x, y, l), liggend(liggend) {}
 
 void Draaideur::teken(QPaintDevice* device) {
     if (!device) return;
@@ -13,15 +13,15 @@ void Draaideur::teken(QPaintDevice* device) {
 
     if(liggend) {
         if(isDeurOpen()) {
-            painter.drawLine(x_coordinaat, y_coordinaat - lengte, x_coordinaat, y_coordinaat);
+            painter.drawLine(getX(), getY() - getLen(), getX(), getY());
         } else {
-            painter.drawLine(x_coordinaat, y_coordinaat, x_coordinaat+lengte, y_coordinaat);
+            painter.drawLine(getX(), getY(), getX()+getLen(), getY());
         }
     } else {
         if(isDeurOpen()) {
-            painter.drawLine(x_coordinaat, y_coordinaat, x_coordinaat+lengte, y_coordinaat);
+            painter.drawLine(getX(), getY(), getX()+getLen(), getY());
         } else {
-            painter.drawLine(x_coordinaat, y_coordinaat, x_coordinaat, y_coordinaat+lengte);
+            painter.drawLine(getX(), getY(), getX(), getY()+getLen());
         }
     }
 }

@@ -10,7 +10,7 @@ void Hallsensor::teken(QPaintDevice* tp) {
     QPainter p(tp);
     QColor kleur;
     p.setBrush(Qt::SolidPattern);
-    if(geactiveerd)
+    if(getGeactiveerd())
         kleur=Qt::green;
     else
         kleur=Qt::white;
@@ -18,5 +18,5 @@ void Hallsensor::teken(QPaintDevice* tp) {
     p.setBrush(kleur);
     QPen pen(kleur,2,Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
     p.setPen(pen);
-    p.drawEllipse(x,y,20,20);
+    p.drawEllipse(getX(),getY(),20,20);
 }
