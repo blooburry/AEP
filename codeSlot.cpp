@@ -3,7 +3,7 @@
 
 CodeSlot::CodeSlot(string s, shared_ptr<QLineEdit> i) : code(stoi(s)), vergrendeld(true), input(i) {}
 
-bool CodeSlot::isVergrendeld() {
+bool CodeSlot::isVergrendeld() const {
     return this->vergrendeld;
 }
 
@@ -22,4 +22,5 @@ void CodeSlot::ontgrendel() {
 
 void CodeSlot::vergrendel() {
     this->vergrendeld = true;
+    this->input->clear();
 }

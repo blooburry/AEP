@@ -16,6 +16,7 @@ void Deur::open() {
     if(getStatus() == OPEN) return;
 
     for(shared_ptr<Slot> slot : getSloten()) {
+        qInfo() << "Slot is :" << (slot->isVergrendeld() ? "vergrendeld" : "ontgrendeld");
         if(slot->isVergrendeld()) return;
     }
     setStatus(OPEN);

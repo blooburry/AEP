@@ -12,7 +12,7 @@ private:
 public:
     SleutelSlot(string, shared_ptr<QLineEdit>);
     void vergrendel() override;
-    bool isVergrendeld() override;
+    bool isVergrendeld() const override;
     void ontgrendel() override;
 };
 

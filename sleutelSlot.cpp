@@ -10,10 +10,11 @@ void SleutelSlot::ontgrendel() {
     }
 }
 
-bool SleutelSlot::isVergrendeld() {
+bool SleutelSlot::isVergrendeld() const {
     return this->vergrendeld;
 }
 
 void SleutelSlot::vergrendel() {
     this->vergrendeld = true;
+    this->input->clear();
 }

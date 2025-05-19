@@ -1,5 +1,3 @@
-#include <string>
-#include <memory>
 #include <QtWidgets/QLineEdit>
 
 using namespace std;
@@ -11,7 +9,7 @@ class Slot {
 public:
     virtual void ontgrendel() = 0;
     virtual void vergrendel() = 0;
-    virtual bool isVergrendeld() = 0;
+    virtual bool isVergrendeld() const = 0;
 };
 
 #endif // SLOT_H
