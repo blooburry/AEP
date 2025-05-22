@@ -2,7 +2,7 @@
 #define DEUR_H
 
 #include <memory>
-#include "slot.h"
+#include "ISlot.h"
 #include <string>
 #include <vector>
 

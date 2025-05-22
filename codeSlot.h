@@ -1,19 +1,18 @@
 #ifndef CODESLOT_H
 #define CODESLOT_H
 
-#include "slot.h"
+#include "ISlot.h"
 #include "defines.h"
 
 class CodeSlot : public Slot {
 private:
     int code;
-    bool vergrendeld = DICHT;
-    shared_ptr<QLineEdit> input;
+    bool vergrendeld = true;
 public:
-    CodeSlot(string, shared_ptr<QLineEdit>);
+    CodeSlot(string);
     void vergrendel() override;
     bool isVergrendeld() const override;
-    void ontgrendel() override;
+    void ontgrendel(string) override;
 };
 
 #endif // CODESLOT_H

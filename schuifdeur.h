@@ -3,7 +3,7 @@
 
 #include "deur.h"
 #include "sensor.h"
-#include "slot.h"
+#include "ISlot.h"
 
 class Schuifdeur : public Deur {
 public:

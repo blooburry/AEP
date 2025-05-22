@@ -1,6 +1,6 @@
 #include "sleutelslot.h"
 
-SleutelSlot::SleutelSlot(string s, shared_ptr<QLineEdit> i): sleutel(s), vergrendeld(true), input(i) {}
+SleutelSlot::SleutelSlot(string s): sleutel(s), vergrendeld(true) {}
 
 void SleutelSlot::ontgrendel(string s) {
     if(s == this->sleutel) {
@@ -14,5 +14,4 @@ bool SleutelSlot::isVergrendeld() const {
 
 void SleutelSlot::vergrendel() {
     this->vergrendeld = true;
-    this->input->clear();
 }

@@ -23,6 +23,7 @@ SOURCES += \
 
 HEADERS += \
     IAfdrukker.h \
+    ISlot.h \
     codeSlot.h \
     defines.h \
     deur.h \
@@ -33,8 +34,7 @@ HEADERS += \
     mainwindow.h \
     schuifdeur.h \
     sensor.h \
-    sleutelSlot.h \
-    slot.h
+    sleutelSlot.h
 
 FORMS += \
     mainwindow.ui
