@@ -1,4 +1,4 @@
-#include "slot.h"
+#include "ISlot.h"
 #include <memory>
 
 #ifndef SLEUTELSLOT_H
@@ -7,13 +7,12 @@
 class SleutelSlot : public Slot {
 private:
     string sleutel;
-    bool vergrendeld;
-    shared_ptr<QLineEdit> input;
+    bool vergrendeld = true;
 public:
-    SleutelSlot(string, shared_ptr<QLineEdit>);
+    SleutelSlot(string);
     void vergrendel() override;
     bool isVergrendeld() const override;
-    void ontgrendel() override;
+    void ontgrendel(string) override;
 };
 
 #endif // SLEUTELSLOT_H

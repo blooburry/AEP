@@ -6,8 +6,6 @@
 #include <vector>
 #include <memory>
 
-#include "herkenningsslot.h"
-
 using namespace std;
 
 #include "deur.h"
@@ -56,11 +54,19 @@ private:
     Ui::MainWindow *ui;
     unique_ptr<Sensor> s1;
     unique_ptr<Deur> schuifdeur;
-    shared_ptr<Herkenningsslot> herkenningsslot;
+    shared_ptr<Slot> herkenningsslot;
     vector<unique_ptr<Deur>> draaideuren;
     shared_ptr<Slot> schuifdeurSlot_0;
     shared_ptr<QTextBrowser> herkenningsslotDisplay;
-    shared_ptr<QLineEdit> herkenningsslotInput;
-    shared_ptr<QLineEdit> herkenningsslotAdminInput;
+    // inputs
+    unique_ptr<QLineEdit> schuifdeurSlotInput_0;
+    unique_ptr<QLineEdit> schuifdeurSlotInput_1;
+    unique_ptr<QLineEdit> draaideur_0Slot_0Input;
+    unique_ptr<QLineEdit> draaideur_0Slot_1Input;
+    unique_ptr<QLineEdit> draaideur_1Slot_0Input;
+    unique_ptr<QLineEdit> herkenningsslotInput;
+    unique_ptr<QLineEdit> herkenningsslotAdminInput;
+    // helper
+    void ontgrendel_met_input(QLineEdit*, shared_ptr<Slot>);
 };
 #endif // MAINWINDOW_H
