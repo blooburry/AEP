@@ -16,7 +16,7 @@ private:
     string naamEigenaar;
     string adresEigenaar;
 public:
-    IdKaart(const string&, const string&, const string&);
+    IdKaart(string, string, string);
     string userId() const;
     void geefToegang(KaartSlot*);
     void verwijderToegang(KaartSlot*);

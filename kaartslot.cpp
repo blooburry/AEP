@@ -25,30 +25,14 @@ void KaartSlot::ontgrendel(string sleutel) {
             throw SlotException(sleutel, this->plaats);
         }
     } catch (const std::out_of_range& e) {
-    qWarning() << "ID does not exist!";
-}
+        qWarning() << "ID does not exist!";
+    }
 }
 
 void KaartSlot::voegIdKaartToe(IdKaart* eenIdKaart) {
     idKaarten[eenIdKaart->userId()] = eenIdKaart;
 }
 
-void KaartSlot::verwijderIdKaart(const string& eenId) {
+void KaartSlot::verwijderIdKaart(string eenId) {
     idKaarten.erase(eenId);
-}
-
-void KaartSlot::geefIdKaartToegang(const string& id) {
-    try{
-        idKaarten.at(id)->geefToegang(this);
-    } catch (const std::out_of_range& e) {
-        qWarning() << "ID does not exist!";
-    }
-}
-
-void KaartSlot::verwijderIdKaartToegang(const string& id) {
-    try{
-        idKaarten.at(id)->verwijderToegang(this);
-    } catch (const std::out_of_range& e) {
-        qWarning() << "ID does not exist!";
-    }
 }

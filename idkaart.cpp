@@ -2,7 +2,7 @@
 #include "KaartSlot.h"  // Nodig voor de forward-declared KaartSlot
 
 // Constructor
-IdKaart::IdKaart(const string& id, const string& naam, const string& adres)
+IdKaart::IdKaart(string id, string naam, string adres)
     : id(id), naamEigenaar(naam), adresEigenaar(adres) {}
 
 // Getter voor de user ID

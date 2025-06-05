@@ -21,9 +21,7 @@ public:
     bool isVergrendeld() const override;
     void ontgrendel(string sleutel) override;
     static void voegIdKaartToe(IdKaart* eenIdKaart);
-    static void verwijderIdKaart(const string& eenId);
-    void geefIdKaartToegang(const string& id);
-    void verwijderIdKaartToegang(const string& id);
+    static void verwijderIdKaart(string);
 };
 
 #endif // KAARTSLOT_H

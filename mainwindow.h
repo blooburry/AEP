@@ -5,6 +5,7 @@
 #include <QtWidgets/QTextBrowser>
 #include <vector>
 #include <memory>
+#include "idkaart.h"
 
 using namespace std;
 
@@ -78,11 +79,12 @@ private:
     unique_ptr<QLineEdit> herkenningsslotInput;
     unique_ptr<QLineEdit> herkenningsslotAdminInput;
         // kaartslot
-    unique_ptr<QLineEdit> idKaartAdminIdInput;
-    unique_ptr<QLineEdit> idKaartAdminNaamInput;
-    unique_ptr<QLineEdit> idKaartAdminPlaatsInput;
-    unique_ptr<QLineEdit> kaartSlotAdminIdInput;
-    unique_ptr<QLineEdit> kaartSlotIdInput;
+    QLineEdit* idKaartAdminIdInput;
+    QLineEdit* idKaartAdminNaamInput;
+    QLineEdit* idKaartAdminPlaatsInput;
+    QLineEdit* kaartSlotAdminIdInput;
+    QLineEdit* kaartSlotIdInput;
+    vector<IdKaart> idKaarten;
     // helper
     void ontgrendel_met_input(QLineEdit*, shared_ptr<Slot>);
 };

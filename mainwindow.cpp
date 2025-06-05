@@ -13,6 +13,7 @@
 
 #include <QPaintDevice>
 #include <QPainter>
+#include <algorithm>
 
 using namespace std;
 
@@ -34,11 +35,11 @@ MainWindow::MainWindow(QWidget *parent)
     draaideur_0Slot_1Input = make_unique<QLineEdit>(this->ui->draaideur_0_lineEdit);
     draaideur_1Slot_0Input = make_unique<QLineEdit>(this->ui->draaideur_1_lineEdit);
         // kaartslot
-    idKaartAdminIdInput = make_unique<QLineEdit>(this->ui->IdKaartToevoegenAdminIdInput);
-    idKaartAdminNaamInput = make_unique<QLineEdit>(this->ui->IdKaartToevoegenAdminNaamInput);
-    idKaartAdminPlaatsInput = make_unique<QLineEdit>(this->ui->IdKaartToevoegenAdminPlaatsInput);
-    kaartSlotAdminIdInput = make_unique<QLineEdit>(this->ui->kaartSlotAdminIdInput);
-    kaartSlotIdInput = make_unique<QLineEdit>(this->ui->kaartSlotIdInput);
+    idKaartAdminIdInput = this->ui->IdKaartToevoegenAdminIdInput;
+    idKaartAdminNaamInput = this->ui->IdKaartToevoegenAdminNaamInput;
+    idKaartAdminPlaatsInput = this->ui->IdKaartToevoegenAdminPlaatsInput;
+    kaartSlotAdminIdInput = this->ui->kaartSlotAdminIdInput;
+    kaartSlotIdInput = this->ui->kaartSlotIdInput;
 
     // sloten
     schuifdeurSlot_0 = make_shared<SleutelSlot>("abcd");
@@ -49,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     shared_ptr<Slot> draaideurSlot_0 = make_shared<CodeSlot>("1234");
     shared_ptr<Slot> draaideurSlot_1 = make_shared<CodeSlot>("5678");
     shared_ptr<Slot> draaideurSlot_2 = make_shared<CodeSlot>("9012");
-    shared_ptr<Slot> schuifdeurSlot_kaartSlot = make_shared<KaartSlot>("schuifdeur");
+    schuifdeurSlot_kaartSlot = make_shared<KaartSlot>("schuifdeur");
 
     // herkenningsslot
     unique_ptr<Drukbox> drukbox = make_unique<Drukbox>(herkenningsslotDisplay);
@@ -58,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
     // deuren
     schuifdeur->voegSlotToe(schuifdeurSlot_0);
     schuifdeur->voegSlotToe(schuifdeurSlot_1);
+    schuifdeur->voegSlotToe(this->schuifdeurSlot_kaartSlot);
 
     draaideuren.push_back(make_unique<Draaideur>(246, 107, 25, false));
     draaideuren[0]->voegSlotToe(draaideurSlot_0);
@@ -230,7 +232,8 @@ void MainWindow::on_idKaartAdminKnop_clicked()
     string naam = this->idKaartAdminNaamInput->text().toStdString();
     string plaats = this->idKaartAdminPlaatsInput->text().toStdString();
     IdKaart k(id, naam, plaats);
-    KaartSlot::voegIdKaartToe(&k);
+    idKaarten.push_back(k);
+    KaartSlot::voegIdKaartToe(&idKaarten.back());
 }
 
 void MainWindow::on_idKaartAdminVerwijderKnop_clicked()
@@ -241,20 +244,43 @@ void MainWindow::on_idKaartAdminVerwijderKnop_clicked()
 
 void MainWindow::on_kaartSlotVoegKaartToeKnop_clicked()
 {
-    auto s = dynamic_cast<KaartSlot*>(this->schuifdeurSlot_kaartSlot.get());
-    string id = this->kaartSlotAdminIdInput->text().toStdString();
-    s->geefIdKaartToegang(id);
+    auto slot = this->schuifdeurSlot_kaartSlot.get();
+    if(auto s = dynamic_cast<KaartSlot*>(slot)){
+        string id = this->kaartSlotAdminIdInput->text().toStdString();
+        auto kaart = std::find_if(idKaarten.begin(), idKaarten.end(), [id](const IdKaart& k) {
+            return k.userId() == id;
+        });
+            if (kaart == idKaarten.end()) {
+                qWarning() << "IdKaart met id <" << id << "> bestaat niet!";
+                return;
+            }
+        kaart->geefToegang(s);
+    } else {
+        qWarning() << "Dynamic cast failed!";
+    }
 }
 
 void MainWindow::on_kaartSlotVerwijderKaartKnop_clicked()
 {
     auto s = dynamic_cast<KaartSlot*>(this->schuifdeurSlot_kaartSlot.get());
-    string id = this->kaartSlotAdminIdInput->text().toStdString();
-    s->verwijderIdKaartToegang(id);
+    if(s){
+        string id = this->kaartSlotAdminIdInput->text().toStdString();
+        auto kaart = std::find_if(idKaarten.begin(), idKaarten.end(), [id](const IdKaart& k) {
+            return k.userId() == id;
+        });
+        if (kaart == idKaarten.end()) {
+            qWarning() << "IdKaart met id <" << id << "> bestaat niet!";
+            return;
+        }
+        kaart->verwijderToegang(s);
+    } else {
+        qWarning() << "Dynamic cast failed!";
+    }
 }
 
 
 void MainWindow::on_kaartSlotIdInput_editingFinished()
 {
-    ontgrendel_met_input(this->kaartSlotIdInput.get(), this->schuifdeurSlot_kaartSlot);
+    auto s = this->schuifdeurSlot_kaartSlot;
+    ontgrendel_met_input(this->kaartSlotIdInput, this->schuifdeurSlot_kaartSlot);
 }
