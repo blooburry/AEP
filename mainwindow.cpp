@@ -8,6 +8,8 @@
 #include "codeSlot.h"
 #include "drukbox.h"
 #include "herkenningsslot.h"
+#include "kaartslot.h"
+#include "slotexception.h"
 
 #include <QPaintDevice>
 #include <QPainter>
@@ -31,6 +33,12 @@ MainWindow::MainWindow(QWidget *parent)
     draaideur_0Slot_0Input = make_unique<QLineEdit>(this->ui->draaideur_0_lineEdit);
     draaideur_0Slot_1Input = make_unique<QLineEdit>(this->ui->draaideur_0_lineEdit);
     draaideur_1Slot_0Input = make_unique<QLineEdit>(this->ui->draaideur_1_lineEdit);
+        // kaartslot
+    idKaartAdminIdInput = make_unique<QLineEdit>(this->ui->IdKaartToevoegenAdminIdInput);
+    idKaartAdminNaamInput = make_unique<QLineEdit>(this->ui->IdKaartToevoegenAdminNaamInput);
+    idKaartAdminPlaatsInput = make_unique<QLineEdit>(this->ui->IdKaartToevoegenAdminPlaatsInput);
+    kaartSlotAdminIdInput = make_unique<QLineEdit>(this->ui->kaartSlotAdminIdInput);
+    kaartSlotIdInput = make_unique<QLineEdit>(this->ui->kaartSlotIdInput);
 
     // sloten
     schuifdeurSlot_0 = make_shared<SleutelSlot>("abcd");
@@ -41,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     shared_ptr<Slot> draaideurSlot_0 = make_shared<CodeSlot>("1234");
     shared_ptr<Slot> draaideurSlot_1 = make_shared<CodeSlot>("5678");
     shared_ptr<Slot> draaideurSlot_2 = make_shared<CodeSlot>("9012");
+    shared_ptr<Slot> schuifdeurSlot_kaartSlot = make_shared<KaartSlot>("schuifdeur");
 
     // herkenningsslot
     unique_ptr<Drukbox> drukbox = make_unique<Drukbox>(herkenningsslotDisplay);
@@ -108,7 +117,6 @@ void MainWindow::on_schuifdeurSensorKnop_2_clicked()
     update();
 }
 
-
 void MainWindow::on_pushButton_2_clicked()
 {
     if(draaideuren[0]->isDeurOpen()) {
@@ -141,7 +149,12 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::ontgrendel_met_input(QLineEdit* i, shared_ptr<Slot> s) {
     string sleutel = i->text().toStdString();
-    s->ontgrendel(sleutel);
+    try {
+        s->ontgrendel(sleutel);
+    } catch (const SlotException& e) {
+        qWarning() << "Slot kon niet worden ontgrendeld:" << e.what();
+    }
+
     if(s->isVergrendeld()) {
         i->setStyleSheet("QLineEdit {border: 2px solid red;}");
     } else {
@@ -210,3 +223,38 @@ void MainWindow::on_herkenningsslotInput_editingFinished()
     ontgrendel_met_input(this->herkenningsslotInput.get(), this->herkenningsslot);
 }
 
+
+void MainWindow::on_idKaartAdminKnop_clicked()
+{
+    string id = this->idKaartAdminIdInput->text().toStdString();
+    string naam = this->idKaartAdminNaamInput->text().toStdString();
+    string plaats = this->idKaartAdminPlaatsInput->text().toStdString();
+    IdKaart k(id, naam, plaats);
+    KaartSlot::voegIdKaartToe(&k);
+}
+
+void MainWindow::on_idKaartAdminVerwijderKnop_clicked()
+{
+    string id = this->idKaartAdminIdInput->text().toStdString();
+    KaartSlot::verwijderIdKaart(id);
+}
+
+void MainWindow::on_kaartSlotVoegKaartToeKnop_clicked()
+{
+    auto s = dynamic_cast<KaartSlot*>(this->schuifdeurSlot_kaartSlot.get());
+    string id = this->kaartSlotAdminIdInput->text().toStdString();
+    s->geefIdKaartToegang(id);
+}
+
+void MainWindow::on_kaartSlotVerwijderKaartKnop_clicked()
+{
+    auto s = dynamic_cast<KaartSlot*>(this->schuifdeurSlot_kaartSlot.get());
+    string id = this->kaartSlotAdminIdInput->text().toStdString();
+    s->verwijderIdKaartToegang(id);
+}
+
+
+void MainWindow::on_kaartSlotIdInput_editingFinished()
+{
+    ontgrendel_met_input(this->kaartSlotIdInput.get(), this->schuifdeurSlot_kaartSlot);
+}

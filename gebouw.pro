@@ -15,6 +15,8 @@ SOURCES += \
     drukbox.cpp \
     hallsensor.cpp \
     herkenningsslot.cpp \
+    idkaart.cpp \
+    kaartslot.cpp \
     main.cpp \
     mainwindow.cpp \
     schuifdeur.cpp \
@@ -31,10 +33,13 @@ HEADERS += \
     drukbox.h \
     hallsensor.h \
     herkenningsslot.h \
+    idkaart.h \
+    kaartslot.h \
     mainwindow.h \
     schuifdeur.h \
     sensor.h \
-    sleutelSlot.h
+    sleutelSlot.h \
+    slotexception.h
 
 FORMS += \
     mainwindow.ui

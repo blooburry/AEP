@@ -50,6 +50,16 @@ private slots:
 
     void on_draaideur_1_lineEdit_editingFinished();
 
+    void on_idKaartAdminKnop_clicked();
+
+    void on_kaartSlotVoegKaartToeKnop_clicked();
+
+    void on_idKaartAdminVerwijderKnop_clicked();
+
+    void on_kaartSlotVerwijderKaartKnop_clicked();
+
+    void on_kaartSlotIdInput_editingFinished();
+
 private:
     Ui::MainWindow *ui;
     unique_ptr<Sensor> s1;
@@ -58,6 +68,7 @@ private:
     vector<unique_ptr<Deur>> draaideuren;
     shared_ptr<Slot> schuifdeurSlot_0;
     shared_ptr<QTextBrowser> herkenningsslotDisplay;
+    shared_ptr<Slot> schuifdeurSlot_kaartSlot;
     // inputs
     unique_ptr<QLineEdit> schuifdeurSlotInput_0;
     unique_ptr<QLineEdit> schuifdeurSlotInput_1;
@@ -66,6 +77,12 @@ private:
     unique_ptr<QLineEdit> draaideur_1Slot_0Input;
     unique_ptr<QLineEdit> herkenningsslotInput;
     unique_ptr<QLineEdit> herkenningsslotAdminInput;
+        // kaartslot
+    unique_ptr<QLineEdit> idKaartAdminIdInput;
+    unique_ptr<QLineEdit> idKaartAdminNaamInput;
+    unique_ptr<QLineEdit> idKaartAdminPlaatsInput;
+    unique_ptr<QLineEdit> kaartSlotAdminIdInput;
+    unique_ptr<QLineEdit> kaartSlotIdInput;
     // helper
     void ontgrendel_met_input(QLineEdit*, shared_ptr<Slot>);
 };
