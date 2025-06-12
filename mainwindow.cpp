@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     schuifdeurSlotInput_0 = make_unique<QLineEdit>(this->ui->schuifdeurKnopLineEdit);
     schuifdeurSlotInput_1 = make_unique<QLineEdit>(this->ui->schuifdeurKnopLineEdit_2);
     draaideur_0Slot_0Input = make_unique<QLineEdit>(this->ui->draaideur_0_lineEdit);
-    draaideur_0Slot_1Input = make_unique<QLineEdit>(this->ui->draaideur_0_lineEdit);
+    draaideur_0Slot_1Input = make_unique<QLineEdit>(this->ui->draaideur_0_lineEdit_2);
     draaideur_1Slot_0Input = make_unique<QLineEdit>(this->ui->draaideur_1_lineEdit);
         // kaartslot
     idKaartAdminIdInput = this->ui->IdKaartToevoegenAdminIdInput;
@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
     schuifdeur = make_unique<Schuifdeur>(500, 182, 60, s1.get());
     herkenningsslotDisplay = make_shared<QTextBrowser>(this->ui->herkenningsslotDisplay);
 
-    shared_ptr<Slot> schuifdeurSlot_1 = make_shared<SleutelSlot>("efgh");
+    schuifdeurSlot_1 = make_shared<SleutelSlot>("efgh");
     shared_ptr<Slot> draaideurSlot_0 = make_shared<CodeSlot>("1234");
     shared_ptr<Slot> draaideurSlot_1 = make_shared<CodeSlot>("5678");
     shared_ptr<Slot> draaideurSlot_2 = make_shared<CodeSlot>("9012");
@@ -95,12 +95,18 @@ MainWindow::~MainWindow()
 }
 
 
+void reset_input(QLineEdit* i) {
+    i->clear();
+    i->setStyleSheet("QLineEdit {border: 1px solid black;}");
+}
+
 void MainWindow::on_schuifdeurSensorKnop_clicked()
 {
     if(schuifdeur->isDeurOpen()) {
         schuifdeur->sluit();
-        this->schuifdeurSlotInput_0->clear();
-        this->schuifdeurSlotInput_1->clear();
+        reset_input(this->schuifdeurSlotInput_0.get());
+        reset_input(this->schuifdeurSlotInput_1.get());
+        reset_input(this->kaartSlotIdInput);
     } else {
         schuifdeur->open();
     }
@@ -123,8 +129,8 @@ void MainWindow::on_pushButton_2_clicked()
 {
     if(draaideuren[0]->isDeurOpen()) {
         draaideuren[0]->sluit();
-        this->draaideur_0Slot_0Input->clear();
-        this->draaideur_0Slot_1Input->clear();
+        reset_input(this->draaideur_0Slot_0Input.get());
+        reset_input(this->draaideur_0Slot_1Input.get());
     } else {
         draaideuren[0]->open();
         ui->draaideur_0_lineEdit->clear();
@@ -138,11 +144,10 @@ void MainWindow::on_pushButton_clicked()
 {
     if(draaideuren[1]->isDeurOpen()) {
         draaideuren[1]->sluit();
-        this->draaideur_1Slot_0Input->clear();
+        reset_input(this->draaideur_1Slot_0Input.get());
+        reset_input(this->herkenningsslotInput.get());
     } else {
         draaideuren[1]->open();
-        ui->draaideur_1_lineEdit->clear();
-        ui->herkenningsslotInput->clear();
     }
 
     update();
@@ -159,8 +164,10 @@ void MainWindow::ontgrendel_met_input(QLineEdit* i, shared_ptr<Slot> s) {
 
     if(s->isVergrendeld()) {
         i->setStyleSheet("QLineEdit {border: 2px solid red;}");
+        qInfo() << "vergrendeld";
     } else {
         i->setStyleSheet("QLineEdit {border: 2px solid rgb(0,255,0);}");
+        qInfo() << "ontgrendeld";
     }
     update();
 }
@@ -173,7 +180,7 @@ void MainWindow::on_schuifdeurKnopLineEdit_editingFinished()
 
 void MainWindow::on_schuifdeurKnopLineEdit_2_editingFinished()
 {
-    ontgrendel_met_input(this->schuifdeurSlotInput_1.get(), this->schuifdeurSlot_0);
+    ontgrendel_met_input(this->schuifdeurSlotInput_1.get(), this->schuifdeurSlot_1);
 }
 
 
@@ -199,6 +206,8 @@ void MainWindow::on_herkenningsslotAdminAllow_clicked()
     if(auto s = dynamic_cast<Herkenningsslot*>(this->herkenningsslot.get())){
         string naam = this->herkenningsslotAdminInput->text().toStdString();
         s->voegAutorisatieToe(naam, true);
+        qInfo() << naam << " is toegestaan.";
+        this->herkenningsslotAdminInput->clear();
     }
 }
 
@@ -208,6 +217,8 @@ void MainWindow::on_herkenningsslotAdminDeny_clicked()
     if(auto s = dynamic_cast<Herkenningsslot*>(this->herkenningsslot.get())){
         string naam = this->herkenningsslotAdminInput->text().toStdString();
         s->voegAutorisatieToe(naam, false);
+        qInfo() << naam << " is verboden.";
+        this->herkenningsslotAdminInput->clear();
     }
 }
 
@@ -231,15 +242,23 @@ void MainWindow::on_idKaartAdminKnop_clicked()
     string id = this->idKaartAdminIdInput->text().toStdString();
     string naam = this->idKaartAdminNaamInput->text().toStdString();
     string plaats = this->idKaartAdminPlaatsInput->text().toStdString();
-    IdKaart k(id, naam, plaats);
+    IdKaart* k = new IdKaart(id, naam, plaats);
     idKaarten.push_back(k);
-    KaartSlot::voegIdKaartToe(&idKaarten.back());
+    KaartSlot::voegIdKaartToe(idKaarten.back());
+    qInfo() << "ID Kaart toegevoegd met id: " << id << " naam: " << naam << " adres: " << plaats;
+    this->idKaartAdminNaamInput->clear();
+    this->idKaartAdminIdInput->clear();
+    this->idKaartAdminPlaatsInput->clear();
 }
 
 void MainWindow::on_idKaartAdminVerwijderKnop_clicked()
 {
     string id = this->idKaartAdminIdInput->text().toStdString();
     KaartSlot::verwijderIdKaart(id);
+    qInfo() << "ID Kaart met ID: " << id << " verwijderd.";
+    this->idKaartAdminNaamInput->clear();
+    this->idKaartAdminIdInput->clear();
+    this->idKaartAdminPlaatsInput->clear();
 }
 
 void MainWindow::on_kaartSlotVoegKaartToeKnop_clicked()
@@ -247,14 +266,16 @@ void MainWindow::on_kaartSlotVoegKaartToeKnop_clicked()
     auto slot = this->schuifdeurSlot_kaartSlot.get();
     if(auto s = dynamic_cast<KaartSlot*>(slot)){
         string id = this->kaartSlotAdminIdInput->text().toStdString();
-        auto kaart = std::find_if(idKaarten.begin(), idKaarten.end(), [id](const IdKaart& k) {
-            return k.userId() == id;
+        this->kaartSlotAdminIdInput->clear();
+        auto kaart = std::find_if(idKaarten.begin(), idKaarten.end(), [id](const IdKaart* k) {
+            return k->userId() == id;
         });
             if (kaart == idKaarten.end()) {
                 qWarning() << "IdKaart met id <" << id << "> bestaat niet!";
                 return;
             }
-        kaart->geefToegang(s);
+        (*kaart)->geefToegang(s);
+        qInfo() << "ID Kaart met id: " << id << "heeft toegang.";
     } else {
         qWarning() << "Dynamic cast failed!";
     }
@@ -265,14 +286,16 @@ void MainWindow::on_kaartSlotVerwijderKaartKnop_clicked()
     auto s = dynamic_cast<KaartSlot*>(this->schuifdeurSlot_kaartSlot.get());
     if(s){
         string id = this->kaartSlotAdminIdInput->text().toStdString();
-        auto kaart = std::find_if(idKaarten.begin(), idKaarten.end(), [id](const IdKaart& k) {
-            return k.userId() == id;
+        this->kaartSlotAdminIdInput->clear();
+        auto kaart = std::find_if(idKaarten.begin(), idKaarten.end(), [id](const IdKaart* k) {
+            return k->userId() == id;
         });
         if (kaart == idKaarten.end()) {
             qWarning() << "IdKaart met id <" << id << "> bestaat niet!";
             return;
         }
-        kaart->verwijderToegang(s);
+        (*kaart)->verwijderToegang(s);
+        qInfo() << "ID Kaart met id: " << id << "is verboden.";
     } else {
         qWarning() << "Dynamic cast failed!";
     }

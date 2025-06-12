@@ -22,10 +22,12 @@ void KaartSlot::ontgrendel(string sleutel) {
         if(idKaarten.at(sleutel)->heeftToegangTot(this)) {
             vergrendeld = false;
         } else {
+            qWarning() << "ID is verboden!";
             throw SlotException(sleutel, this->plaats);
         }
     } catch (const std::out_of_range& e) {
         qWarning() << "ID does not exist!";
+        throw SlotException(sleutel, this->plaats);
     }
 }
 

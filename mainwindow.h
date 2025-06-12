@@ -68,6 +68,7 @@ private:
     shared_ptr<Slot> herkenningsslot;
     vector<unique_ptr<Deur>> draaideuren;
     shared_ptr<Slot> schuifdeurSlot_0;
+    shared_ptr<Slot> schuifdeurSlot_1;
     shared_ptr<QTextBrowser> herkenningsslotDisplay;
     shared_ptr<Slot> schuifdeurSlot_kaartSlot;
     // inputs
@@ -84,7 +85,7 @@ private:
     QLineEdit* idKaartAdminPlaatsInput;
     QLineEdit* kaartSlotAdminIdInput;
     QLineEdit* kaartSlotIdInput;
-    vector<IdKaart> idKaarten;
+    vector<IdKaart*> idKaarten;
     // helper
     void ontgrendel_met_input(QLineEdit*, shared_ptr<Slot>);
 };
